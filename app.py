@@ -1,60 +1,35 @@
-# import the streamlit library
 import streamlit as st
+from urllib.parse import urlparse, parse_qs
+from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api.proxies import GenericProxyConfig
 
-# give a title to our app
-st.title('Welcome to BMI Calculator')
+ytt_api = YouTubeTranscriptApi(    proxy_config=GenericProxyConfig(
+        http_url="http://user:pass@my-custom-proxy.org:port",
+        https_url="https://user:pass@my-custom-proxy.org:port",
+    ))
 
-# TAKE WEIGHT INPUT in kgs
-weight = st.number_input("Enter your weight (in kgs)")
+def main():
+    st.title("Marizer")
+    st.markdown("### YouTube Video Summarizer")
 
-# TAKE HEIGHT INPUT
-# radio button to choose height format
-status = st.radio('Select your height format: ',
-                  ('cms', 'meters', 'feet'))
+    url = st.text_input("Enter YouTube URL")
+    transcript = fetch_transcript(video_id(url))
 
-# compare status value
-if(status == 'cms'):
-    # take height input in centimeters
-    height = st.number_input('Centimeters')
 
-    try:
-        bmi = weight / ((height/100)**2)
-    except:
-        st.text("Enter some value of height")
+def video_id(url):
+    parsed_url = urlparse(url)
+    if parsed_url.hostname == "youtu.be":
+        return parsed_url.path[1:]
+    elif parsed_url.hostname in ["www.youtube.com", "youtube.com"]:
+        if parsed_url.path == "/watch":
+            return parse_qs(parsed_url.query).get("v", [None])[0]
+        elif parsed_url.path.startswith("/embed/"):
+            return parsed_url.path.split("/")[2]
+        elif parsed_url.path.startswith("/v/"):
+            return parsed_url.path.split("/")[2]
+    return None
 
-elif(status == 'meters'):
-    # take height input in meters
-    height = st.number_input('Meters')
+def fetch_transcript(id_):
+    print(ytt_api.fetch(id_).snippets)
 
-    try:
-        bmi = weight / (height ** 2)
-    except:
-        st.text("Enter some value of height")
-
-else:
-    # take height input in feet
-    height = st.number_input('Feet')
-
-    # 1 meter = 3.28
-    try:
-        bmi = weight / (((height/3.28))**2)
-    except:
-        st.text("Enter some value of height")
-
-# check if the button is pressed or not
-if(st.button('Calculate BMI')):
-
-    # print the BMI INDEX
-    st.text("Your BMI Index is {}.".format(bmi))
-
-    # give the interpretation of BMI index
-    if(bmi < 16):
-        st.error("You are Extremely Underweight")
-    elif(bmi >= 16 and bmi < 18.5):
-        st.warning("You are Underweight")
-    elif(bmi >= 18.5 and bmi < 25):
-        st.success("Healthy")
-    elif(bmi >= 25 and bmi < 30):
-        st.warning("Overweight")
-    elif(bmi >= 30):
-        st.error("Extremely Overweight")
+fetch_transcript("god33lcDUmM")
