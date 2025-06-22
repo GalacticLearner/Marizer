@@ -6,8 +6,8 @@ from youtube_transcript_api.proxies import GenericProxyConfig
 
 summarizer = pipeline("summarization", model="t5-small")
 ytt_api = YouTubeTranscriptApi(proxy_config=GenericProxyConfig(
-        http_url="http://161.49.210.196:10101",
-        https_url="https://161.49.210.196:10101"))
+        http_url="http://164.163.40.16:10000",
+        https_url="https://164.163.40.16:10000"))
 
 def main():
     st.title("Marizer")
