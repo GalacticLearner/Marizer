@@ -1,20 +1,20 @@
 import streamlit as st
+from transformers import pipeline
 from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.proxies import GenericProxyConfig
 
-ytt_api = YouTubeTranscriptApi(    proxy_config=GenericProxyConfig(
-        http_url="http://user:pass@my-custom-proxy.org:port",
-        https_url="https://user:pass@my-custom-proxy.org:port",
-    ))
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+ytt_api = YouTubeTranscriptApi()
 
 def main():
     st.title("Marizer")
     st.markdown("### YouTube Video Summarizer")
 
     url = st.text_input("Enter YouTube URL")
-    transcript = fetch_transcript(video_id(url))
-
+    transcript = process_transcript(fetch_transcript(video_id(url)))
+    summary = summarizer(transcript)
+    st.text(summary)
 
 def video_id(url):
     parsed_url = urlparse(url)
@@ -30,6 +30,10 @@ def video_id(url):
     return None
 
 def fetch_transcript(id_):
-    print(ytt_api.fetch(id_).snippets)
+    return ytt_api.fetch(id_).snippets
 
-fetch_transcript("god33lcDUmM")
+def process_transcript(transcript):
+    text = ""
+    for snippet in transcript.snippets:
+        text.append(snippet.text)
+    return text
