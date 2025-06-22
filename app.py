@@ -4,7 +4,7 @@ from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.proxies import WebshareProxyConfig
 
-summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+summarizer = pipeline("summarization", model="t5-small")
 ytt_api = YouTubeTranscriptApi(proxy_config=WebshareProxyConfig(
         proxy_username="joisswam",
         proxy_password="1343n86s480k"))
@@ -15,7 +15,7 @@ def main():
 
     url = st.text_input("Enter YouTube URL")
     transcript = process_transcript(fetch_transcript(video_id(url)))
-    summary = summarizer(transcript)
+    summary = summarizer("summarize: " + transcript)
     st.text(summary)
 
 def video_id(url):
