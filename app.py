@@ -19,6 +19,7 @@ def main():
     if transcript:
         summary = summarizer("summarize: " + transcript)
         st.text(summary)
+        st.download(label="Download Summary", data=summary, file_name="summary.txt", mime="text/plain")
 
 def video_id(url):
     parsed_url = urlparse(url)
