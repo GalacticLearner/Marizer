@@ -37,3 +37,6 @@ def process_transcript(transcript):
     for snippet in transcript.snippets:
         text.append(snippet.text)
     return text
+
+if __name__ == "__main__":
+    main()
