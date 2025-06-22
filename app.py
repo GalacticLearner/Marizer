@@ -2,12 +2,12 @@ import streamlit as st
 from transformers import pipeline
 from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.proxies import WebshareProxyConfig
+from youtube_transcript_api.proxies import GenericProxyConfig
 
 summarizer = pipeline("summarization", model="t5-small")
-ytt_api = YouTubeTranscriptApi(proxy_config=WebshareProxyConfig(
-        proxy_username="joisswam",
-        proxy_password="1343n86s480k"))
+ytt_api = YouTubeTranscriptApi(proxy_config=GenericProxyConfig(
+        http_url="http://161.49.210.196:10101",
+        https_url="https://161.49.210.196:10101"))
 
 def main():
     st.title("Marizer")
