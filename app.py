@@ -32,10 +32,15 @@ def video_id(url):
     return None
 
 def fetch_transcript(id_):
-    return ytt_api.fetch(id_).snippets
+    if id_:
+        return ytt_api.fetch(id_).snippets
 
 def process_transcript(transcript):
     text = ""
+
+    if not transcript:
+        return text
+    
     for snippet in transcript.snippets:
         text.append(snippet.text)
     return text
