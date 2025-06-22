@@ -15,8 +15,10 @@ def main():
 
     url = st.text_input("Enter YouTube URL")
     transcript = process_transcript(fetch_transcript(video_id(url)))
-    summary = summarizer("summarize: " + transcript)
-    st.text(summary)
+    
+    if transcript:
+        summary = summarizer("summarize: " + transcript)
+        st.text(summary)
 
 def video_id(url):
     parsed_url = urlparse(url)
