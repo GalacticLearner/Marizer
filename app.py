@@ -4,7 +4,7 @@ from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.proxies import WebshareProxyConfig
 
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 ytt_api = YouTubeTranscriptApi(proxy_config=WebshareProxyConfig(
         proxy_username="joisswam",
         proxy_password="1343n86s480k"))
